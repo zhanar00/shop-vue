@@ -17,13 +17,18 @@ const isAuthOpen = ref(false)
 const searchText = ref('')
 const cart = useCartStore()
 
-// Загрузка категорий
+const API = 'https://corsproxy.io/?https://shop.bepro.kz/api'
+
+// загрузка категорийь
 const fetchCategories = async () => {
   try {
-    const response = await fetch('/api/products/categories/?store_id=1')
-    categories.value = await response.json()
+    const response = await fetch(`${API}/products/categories/?store_id=1`)
+    const data = await response.json()
+    categories.value = data
+    return data
   } catch (err) {
-    console.error(err)
+    console.error('Ошибка категорий:', err)
+    return []
   }
 }
 
@@ -31,7 +36,7 @@ const fetchCategories = async () => {
 const fetchProductsByCategory = async (categoryId) => {
   isLoading.value = true
   try {
-    const response = await fetch(`/api/products/?store_id=1&category_id=${categoryId}`)
+    const response = await fetch(`${API}/products/?store_id=1&category_id=${categoryId}`)
     const data = await response.json()
     products.value = data.results
   } catch (err) {
@@ -67,7 +72,7 @@ onMounted(async () => {
   }
 })
 
-// Фильтрация товаров по поисковому запросу
+// Фильтрация товаров по поисковому запросуу
 const filteredProducts = computed(() => {
   if (!searchText.value) {
     return products.value
