@@ -58,13 +58,14 @@ const handleSelectCategory = (id) => {
 onMounted(async () => {
   const cats = await fetchCategories()
 
-  const savedId = localStorage.getItem('lastCategoryId')
+  const savedId = Number(localStorage.getItem('lastCategoryId'))
 
   if (savedId) {
     activeCategoryId.value = savedId
     fetchProductsByCategory(savedId)
   } else {
     const defaultCategory = cats[0]?.children?.[0]
+
     if (defaultCategory) {
       activeCategoryId.value = defaultCategory.id
       fetchProductsByCategory(defaultCategory.id)
